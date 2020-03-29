@@ -81,7 +81,6 @@ module.exports = {
                     succes: 1,
                     message: "update lur"
                 });
-                cons
             }
         });
     },

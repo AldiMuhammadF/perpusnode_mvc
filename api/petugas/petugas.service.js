@@ -80,7 +80,7 @@ module.exports = {
     },
     serviceGetPetugasByEmail: (email, callBack) => {
         db.query(
-            `select nm_petugas, email, password from petugas where email = ?`,
+            `select kd_petugas, nm_petugas, email, password from petugas where email = ?`,
             [email],
             (err, results, fields) => {
                 if (err) {

@@ -5,7 +5,8 @@ const {
     serviceUpdatePinjam,
     serviceDeletePinjam
 } = require('./pinjam.service');
-const { verify } = require('jsonwebtoken')
+let { genSaltSync, hashSync } = require("bcrypt");
+const { verify } = require('jsonwebtoken');
 
 module.exports = {
     controllerPeminjaman: (req, res) => {
@@ -23,8 +24,8 @@ module.exports = {
                     var user = decoded.result
                     const data = {
                         kd_buku: body.kd_buku,
-                        nm_anggota: user.nm_anggota,
-                        nm_petugas: body.nm_petugas,
+                        kd_anggota: body.kd_anggota,
+                        kd_petugas: user.kd_petugas,
                         tgl_pinjam: body.tgl,
                     }
                     serviceAddPinjam(data, (err, results) => {
@@ -66,5 +67,78 @@ module.exports = {
             })
         }
     },
+    controllerGetPinjamById: (req, res) => {
+        let no_pinjam = req.params.id;
+        serviceGetPinjamById(no_pinjam, (err, results) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (!results) {
+                return res.json({
+                    succes: 0,
+                    message: "Record not found"
+                });
+            } else {
+                return res.json({
+                    succes: 1,
+                    data: results
+                });
+            }
+        });
+    },
+    controllerGetPinjam: (req, res) => {
+        serviceGetPinjam((err, results) => {
+            if (err) {
+                console.error(err);
+                return;
+            } else {
+                return res.json({
+                    succes: 1,
+                    data: results
+                });
+            }
+        });
+    },
+    controllerUpdatePinjam: (req, res) => {
+        let body = req.body;
+        serviceUpdatePinjam(body, (err, results) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (!results) {
+                return res.json({
+                    succes: 0,
+                    message: "update failed"
+                });
+            } else {
+                return res.json({
+                    succes: 1,
+                    message: "update lur"
+                });
+            }
+        });
+    },
+    controllerDeletePinjam: (req, res) => {
+        let data = req.body
+        serviceDeletePinjam(data, (err, results) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (!results) {
+                return res.json({
+                    succes: 0,
+                    message: "Record not found"
+                });
+            } else {
+                return res.json({
+                    succes: 1,
+                    message: "user delete succesfuly"
+                });
+            }
+        });
+    }
 
 }

@@ -29,12 +29,12 @@ module.exports = {
                         ]
                     );
                     db.query(
-                        `insert into peminjam(kd_buku,nm_anggota,nm_petugas,tgl_pinjam)
+                        `insert into peminjam(kd_buku,kd_anggota,kd_petugas,tgl_pinjam)
                             values(?,?,?,?)`,
                         [
                             data_barang.kd_buku,
-                            data.nm_anggota,
-                            data.nm_petugas,
+                            data.kd_anggota,
+                            data.kd_petugas,
                             data.tgl_pinjam
                         ],
                         (err, res) => {
@@ -56,10 +56,10 @@ module.exports = {
             }
         });
     },
-    serviceGetPinjamById: (kd_pinjam, callBack) => {
+    serviceGetPinjamById: (no_pinjam, callBack) => {
         db.query(
-            `select * from peminjam where kd_pinjam = ?`,
-            [kd_pinjam],
+            `select * from peminjam where no_pinjam = ?`,
+            [no_pinjam],
             (err, resuls, fields) => {
                 if (err) {
                     return callBack(err);
@@ -71,11 +71,12 @@ module.exports = {
     },
     serviceUpdatePinjam: (data, callBack) => {
         db.query(
-            `update pinjam set kd_buku=?, kd_anggota=? ,kd_petugas=? where kd_pinjam=?`,
+            `update peminjam set kd_buku=?, kd_anggota=? ,tgl_pinjam=? where no_pinjam=?`,
             [
                 data.kd_buku,
                 data.kd_anggota,
-                data.kd_petugas
+                data.tgl_pinjam,
+                data.no_pinjam
             ],
             (err, results, fields) => {
                 if (err) {
@@ -87,16 +88,16 @@ module.exports = {
         );
     },
     serviceDeletePinjam: (data, callBack) => {
-        db.query(`select * from peminjam where kd_pinjam=?`,
-            [data.kd_pinjam],
+        db.query(`select * from peminjam where no_pinjam=?`,
+            [data.no_pinjam],
             (err, result) => {
                 if (err) {
                     callBack(err)
                 } if (!result) {
                     callBack(result)
                 } else {
-                    db.query(`delete from peminjam where kd_pinjam=?`,
-                        [data.kd_pinjam])
+                    db.query(`delete from peminjam where no_pinjam=?`,
+                        [data.no_pinjam])
                     return callBack(null, result[0])
                 }
             })
